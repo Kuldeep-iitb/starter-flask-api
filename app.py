@@ -1,4 +1,6 @@
-from flask import Flask
+
+from flask import Flask,render_template,url_for,request,redirect, make_response
+import json
 import os
 import time
 import random
@@ -30,8 +32,24 @@ def next_exp():   # Expiry date selection for correct url
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
+@app.route('/', methods=["GET", "POST"])
+def main():
+    return render_template('index.html')
+
+@app.route('/data', methods=["GET", "POST"])
+def data():
+    # Data Format
+    # [TIME, Temperature, Humidity]
+
+    Temperature = random() * 100
+    Humidity = random() * 55
+    data = [time() * 1000, Temperature, Humidity]
+    response = make_response(json.dumps(data))
+    response.content_type = 'application/json'
+    return response
+
+@app.route('/nf')
+def nf():
     n_url = _nifty + str(next_exp()) 
     Raw_Table_Nf = pd.read_html(n_url)
     spot_price_Nf = float(Raw_Table_Nf[0].iloc[4][1])
