@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html  lang="en" dir="ltr">
-<head>
+  <head>
     <meta charset="utf-8">
-
+    <meta http-equiv="refresh" content="5" >
     <title>Flask App </title>
 
+    <!-- Charlist-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 
     <!-- Bootstraps Java Scipts Links -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -18,90 +21,49 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 
-    <!--High CHART LIVE  -->
-    <script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="http://code.highcharts.com/highcharts-more.js"></script>
-    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+  </head>
+
+  <body>
+  <div class="jumbotron">
+    <h1 class="display-4">Hello, world!</h1>
+  </div>
+
+  <div class="ct-chart ct-perfect-fourth"></div>
+
+  <script>
+    class MyCharts{
+
+      constructor(xData, YData)
+      {
+        this.XData = XData;
+        this.YData = YData;
+      }
+
+      createGraph()
+      {
+        var data =
+                {
+                  labels: this.XData,
+                  series:[
+                          this.YData
+                  ]
+                }
+        new Chartist.Line('.ct-chart', data);
+      }
+    }
+
+  var XData= ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+    var YData = [5, 2, 4, 2, 0];
+    var data = $.get('/temperature');
+    var tm = data.done(function (resp) {
+      console.log("JSON DATA", resp.temperature);
+      var obj = new MyCharts(XData, resp.temperature);
+      obj.createGraph();
+
+    })
 
 
-
-</head>
-
-<body>
-
-    <div class="jumbotron">
-    </div>
-
-    <br>
-    <br>
-
-
-    <div class="container-fluid">
-        <!-- Example row of columns -->
-        <div class="row">
-            <div class="container-fluid" id="data-container">
-
-            </div>
-        </div>
-    </div>
-
-
-
-    <script>
-        var chart;
-
-        function requestData()
-        {
-            // Ajax call to get the Data from Flask
-            var requests = $.get('/data');
-
-
-            var tm = requests.done(function (result)
-            {
-                var series = chart.series[0],
-                    shift = series.data.length > 20;
-
-                // add the point
-                chart.series[0].addPoint(result, true, shift);
-
-                // call it again after one second
-                setTimeout(requestData, 2000);
-            });
-        }
-
-        $(document).ready(function() {
-            chart = new Highcharts.Chart({
-                chart: {
-                    renderTo: 'data-container',
-                    defaultSeriesType: 'spline',
-                    events: {
-                        load: requestData
-                    }
-                },
-                title: {
-                    text: 'Live random data'
-                },
-                xAxis: {
-                    type: 'datetime',
-                    tickPixelInterval: 150,
-                    maxZoom: 20 * 1000
-                },
-                yAxis: {
-                    minPadding: 0.2,
-                    maxPadding: 0.2,
-                    title: {
-                        text: 'Value',
-                        margin: 80
-                    }
-                },
-                series: [{
-                    name: 'Random data',
-                    data: []
-                }]
-            });
-
-        });
-    </script>
-</body>
+  </script>
+  </body>
 
 </html>
