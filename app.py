@@ -40,7 +40,6 @@ def main():
 def data():
     # Data Format
     # [TIME, Temperature, Humidity]
-
     Temperature = random() * 100
     Humidity = random() * 55
     data = [time() * 1000, Temperature, Humidity]
