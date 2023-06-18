@@ -40,8 +40,10 @@ def main():
 def data():
     # Data Format
     # [TIME, Temperature, Humidity]
-    Temperature = random() * 100
-    Humidity = random() * 55
+    Temperature = (pd.Timestamp('now') + pd.Timedelta('05:30:00'))
+    Humidity = random() * 55  
+    # Temperature = random() * 100
+    # Humidity = random() * 55
     data = [time() * 1000, Temperature, Humidity]
     response = make_response(json.dumps(data))
     response.content_type = 'application/json'
